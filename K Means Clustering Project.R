@@ -1,0 +1,30 @@
+##K Means Clustering Project
+df1 <- read.csv('winequality-red.csv', sep=';')
+df2 <- read.csv('winequality-white.csv', sep=';')
+df1$label <- sapply(df1$pH, function(x){'red'})
+df2$label <- sapply(df2$pH, function(x){'white'})
+head(df1)
+head(df2)
+wine <- rbind(df1, df2)
+head(wine)
+str(wine)
+#EDA
+library(ggplot2)
+histogram <- ggplot(wine, aes(x=residual.sugar)) + geom_histogram(aes(fill=label), color='black') + theme_bw() + scale_fill_manual(values=c('red', 'white'))
+print(histogram)
+citrichist <- ggplot(wine, aes(x=citric.acid)) + geom_histogram(aes(fill=label), color='black') + theme_bw() + scale_fill_manual(values=c('red', 'white'))
+print(citrichist)
+alchist <- ggplot(wine, aes(x=alcohol)) + geom_histogram(aes(fill=label), color='black') + theme_bw() + scale_fill_manual(values=c('red', 'white'))
+print(alchist)
+scatterplot <- ggplot(wine, aes(x=citric.acid, y=residual.sugar)) + geom_point(aes(color=label)) + scale_color_manual(values=c('red', 'white')) + theme_dark()
+print(scatterplot)
+scatterplot2 <- ggplot(wine, aes(x=volatile.acidity, y=residual.sugar))+ geom_point(aes(color=label))+ scale_color_manual(values=c('red', 'white'))+ theme_dark()
+print(scatterplot2)
+clus.data <- subset(wine[,1:12])
+head(clus.data)
+#BUILDING THE CLUSTERS
+wine.cluster <- kmeans(clus.data, 2)
+print(wine.cluster$centers)
+#EVALUATING THE CLUSETERS
+table(wine$label, wine.cluster$cluster)
+
